@@ -5,12 +5,10 @@ import { useState, useEffect } from "react";
 export default function Home() {
   const [task, setTask] = useState<string>(""); // Current task input
   const [tasks, setTasks] = useState<string[]>([]); // List of tasks
-  const [loading, setLoading] = useState<boolean>(true); // Loader state
   const [adding, setAdding] = useState<boolean>(false); // Adding task loader
 
   // Fetch tasks from the API
   const fetchTasks = async () => {
-    setLoading(true); 
     try {
       const response = await fetch("/api/cards"); // Fetch from the GET API
       if (!response.ok) throw new Error("Failed to fetch tasks");
@@ -18,8 +16,6 @@ export default function Home() {
       setTasks(data.map((task: {_id: string , cardName: string }) => ({id: task._id , cardName: task.cardName}))); // Extract card names
     } catch (error) {
       console.error("Error fetching tasks:", error);
-    } finally {
-      setLoading(false); // Hide loader
     }
   };
 

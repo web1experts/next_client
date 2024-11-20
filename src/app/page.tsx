@@ -57,6 +57,7 @@ export default function Home() {
       const response = await fetch(`/api/delete-card?id=${taskId}`, {
         method: 'DELETE',
       });
+      if (!response.ok) throw new Error("Failed to add task");
       setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId)); 
     }catch(error){
       console.log("error" , error)
