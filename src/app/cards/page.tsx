@@ -10,12 +10,12 @@ export default function Home() {
 
   // Fetch tasks from the API
   const fetchTasks = async () => {
-    setLoading(true); // Show loader
+    setLoading(true); 
     try {
       const response = await fetch("/api/cards"); // Fetch from the GET API
       if (!response.ok) throw new Error("Failed to fetch tasks");
       const data = await response.json();
-      setTasks(data.map((task: { cardName: string }) => task.cardName)); // Extract card names
+      setTasks(data.map((task: {_id: string , cardName: string }) => ({id: task._id , cardName: task.cardName}))); // Extract card names
     } catch (error) {
       console.error("Error fetching tasks:", error);
     } finally {
@@ -47,6 +47,19 @@ export default function Home() {
       console.error("Error adding task:", error);
     } finally {
       setAdding(false); // Hide adding loader
+    }
+  };
+
+  // Delete a task
+  const deleteTask = async(taskId: string) => {
+    try{
+      const response = await fetch(`/api/delete-card?id=${taskId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete task');
+      await fetchTasks(); // Refresh the tasks list after adding
+    }catch(error){
+      console.log("error" , error)
     }
   };
 
@@ -87,11 +100,9 @@ export default function Home() {
       </div>
 
       {/* Show loader while fetching tasks */}
-      {loading ? (
-        <div>Loading tasks...</div>
-      ) : (
+      {(tasks && tasks.length > 0)&&
         <ul style={{ listStyle: "none", padding: 0 }}>
-          {tasks.map((task, index) => (
+          {tasks.slice().reverse() .map((task, index) => (
             <li
               key={index}
               style={{
@@ -105,11 +116,25 @@ export default function Home() {
                 color: "#000"
               }}
             >
-              <span>{task}</span>
+              <span>{task.cardName}</span>
+              <button
+                onClick={() => deleteTask(task.id)}
+                style={{
+                  padding: "5px 10px",
+                  fontSize: "14px",
+                  backgroundColor: "red",
+                  color: "white",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+              Delete
+            </button>
             </li> 
           ))}
         </ul>
-      )}
+      }
+      
     </div>
   );
 }
