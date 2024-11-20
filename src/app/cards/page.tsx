@@ -1,10 +1,11 @@
 "use client"; // This line ensures client-side rendering
 
 import { useState, useEffect } from "react";
+import { Task } from "../types";
 
 export default function Home() {
   const [task, setTask] = useState<string>(""); // Current task input
-  const [tasks, setTasks] = useState<string[]>([]); // List of tasks
+  const [tasks, setTasks] = useState<Task[]>([]); // List of tasks
   const [adding, setAdding] = useState<boolean>(false); // Adding task loader
 
   // Fetch tasks from the API

@@ -1,10 +1,11 @@
 "use client"; // Add this line at the top of the file
 
 import { useState , useEffect } from "react";
+import { Task } from "./types";
 
 export default function Home() {
   const [task, setTask] = useState<string>("");
-  const [tasks, setTasks] = useState<string[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
 
 
