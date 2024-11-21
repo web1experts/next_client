@@ -6,7 +6,6 @@ import { Task } from "../types";
 export default function Home() {
   const [task, setTask] = useState<string>(""); // Current task input
   const [tasks, setTasks] = useState<Task[]>([]); // List of tasks
-  const [adding, setAdding] = useState<boolean>(false); // Adding task loader
 
   // Fetch tasks from the API
   const fetchTasks = async () => {
@@ -28,8 +27,6 @@ export default function Home() {
   // Add a new card via the API and refresh tasks
   const addTask = async () => {
     if (task.trim() === "") return; // Ignore empty tasks
-    setAdding(true); // Show loader for adding a task
-
     try {
       const response = await fetch("/api/add-cards", {
         method: "POST",
@@ -42,9 +39,7 @@ export default function Home() {
       setTask(""); // Clear the input
     } catch (error) {
       console.error("Error adding task:", error);
-    } finally {
-      setAdding(false); // Hide adding loader
-    }
+    } 
   };
 
   // Delete a task
@@ -60,6 +55,13 @@ export default function Home() {
     }
   };
 
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      addTask();
+    }
+  };
+
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
       <h1> My List</h1>
@@ -70,6 +72,7 @@ export default function Home() {
           type="text"
           value={task}
           onChange={(e) => setTask(e.target.value)}
+          onKeyDown={handleKeyPress}
           placeholder="Enter a new task"
           style={{
             padding: "10px",
@@ -79,21 +82,7 @@ export default function Home() {
             color: "#000"
           }}
         />
-        <button
-          onClick={addTask}
-          style={{
-            padding: "10px",
-            fontSize: "16px",
-            backgroundColor: "#0070f3",
-            color: "white",
-            border: "none",
-            cursor: adding ? "not-allowed" : "pointer",
-            opacity: adding ? 0.7 : 1,
-          }}
-          disabled={adding}
-        >
-          {adding ? "Adding..." : "Add a card"}
-        </button>
+        
       </div>
 
       {/* Show loader while fetching tasks */}
@@ -135,3 +124,21 @@ export default function Home() {
     </div>
   );
 }
+
+
+
+// <button
+//           onClick={addTask}
+//           style={{
+//             padding: "10px",
+//             fontSize: "16px",
+//             backgroundColor: "#0070f3",
+//             color: "white",
+//             border: "none",
+//             cursor: adding ? "not-allowed" : "pointer",
+//             opacity: adding ? 0.7 : 1,
+//           }}
+//           disabled={adding}
+//         >
+//           {adding ? "Adding..." : "Add a card"}
+//         </button>

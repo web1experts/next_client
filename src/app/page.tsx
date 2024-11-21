@@ -18,7 +18,7 @@ export default function Home() {
         console.log("data" , data)
         setTasks(data.map((task: {_id: string , cardName: string }) => ({id: task._id , cardName: task.cardName}))); // Extract card names
       } catch (error) {
-        console.error("Error fetching tasks:", error);
+        console.log("Error fetching tasks:", error);
       }
     };
 
@@ -65,8 +65,14 @@ export default function Home() {
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      addTask();
+    }
+  };
 
-  console.log("tasks" , tasks)
+
+
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
@@ -78,6 +84,7 @@ export default function Home() {
           type="text"
           value={task}
           onChange={(e) => setTask(e.target.value)}
+          onKeyDown={handleKeyPress}
           placeholder="Enter a new task"
           style={{
             padding: "10px",
@@ -87,20 +94,6 @@ export default function Home() {
             color:"#000"
           }}
         />
-        <button
-          onClick={addTask}
-          style={{
-            padding: "10px",
-            fontSize: "16px",
-            backgroundColor: "#0070f3",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-
-          }}
-        >
-          Add a card
-        </button>
       </div>
 
       {/* List of tasks */}
